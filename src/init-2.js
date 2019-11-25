@@ -2,7 +2,7 @@
 /* jslint evil: true */
 (function (win) {
     'use strict';
-
+     
     var listeners = [],
     doc = win.document,
     MutationObserver = win.MutationObserver || win.WebKitMutationObserver,
@@ -144,7 +144,7 @@
             useCachebuster: false,
             zoneOptions: {}
         };
-
+                
         /**
          * Add custom styling for the selector in use
          */
@@ -166,6 +166,17 @@
 
             head.appendChild(style);
         };
+           
+        var logToConsole = function() {
+            
+            var args = Array.prototype.slice.call(arguments);
+            args.unshift('Broadstreet Logger:');
+            if(options.logging) {
+                console.log.apply(null, args)
+            }           
+        }
+
+        
 
         /**
          * Return a comma separated list of keywords
@@ -393,6 +404,14 @@
         };
 
         var init = function() {
+            logToConsole(
+                {
+                    'Zones': zones,
+                    'Total Zone Count': self.loadZone.length,
+                    targets: options.targets
+
+                }                  
+            )
             setCustomElementCSS();
             // check for preview mode
             previewParams = getPreviewParams();

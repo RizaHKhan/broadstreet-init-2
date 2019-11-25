@@ -18,9 +18,11 @@ Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots 
 </p><p>
 The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
 </p>
-
+<broadstreet-zone zone-id="76251"></broadstreet-zone>
+<broadstreet-zone zone-id="76251"></broadstreet-zone>
 </div>
 <div style="clear: both;"></div>
+
 
 
 <script>
@@ -35,25 +37,19 @@ broadstreet.setTargeting({
 
 function go() {
 
-window.zoneLoaded = (data, id) => {
-    console.log(data, id)
-}
-
 window.broadstreet.watch ({
-        //keywords: 'keyword1,keyword2,keyword3',
-        uriKeywords: true, // if and when the above is uncommented, comment out this line
-        softKeywords: true,
-        //networkId: 1,
-        domain: 'localhost:3002',
-        zoneOptions: {},
-        //preview: true,
-        useCachebuster: true,
-        targets: {
-            q: 'katzgrau'
-        },
-        passTargetsToDestination: true,
-        callback: 'alerts'
-    });
+    uriKeywords: true, // if and when the above is uncommented, comment out this line
+    softKeywords: true,
+    //networkId: 1,
+    zoneOptions: {},
+    //preview: true,
+    useCachebuster: true,
+    targets: {
+        q: 'katzgrau'
+    },
+    passTargetsToDestination: true,
+    logging: true
+    })
 };
 
 window.broadstreet = window.broadstreet || { run: [] };
