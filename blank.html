@@ -1,0 +1,38 @@
+<div street-address="89958"></div><script>
+(function(d, s) {
+  // CLICK MACRO AND CONFIGURATION SECTION
+  var destination = 'https%3A%2F%2Fplatform.rtbiq.com%2Fevents%3Fev%3Dclick%26tr%3D5a7df9e9624c26541ffad89d%26fo%3Dhttp%253A%252F%252Fprotectthepacific.com%252F%253Futm_source%253Dbanner%2526utm_medium%253Dcpc%2526utm_campaign%253Dreps';
+  // 3rd Party Click Tracking - default DFP compatibility
+  var click_url = '%%CLICK_URL_ESC%%';
+  // DO NOT EDIT BELOW THIS LINE
+  var js, bjs = d.getElementsByTagName(s)[0];
+  js = d.createElement(s); js.async = true;
+  js.src = "http://localhost:9090/display/89958.js?preview=true&sa=1"
+    + (window.broadstreet ? 'init=0' : '')
+    + (click_url.indexOf('CLICK_URL_ESC') >= 0
+      ? '' : '&click_url=' + click_url)
+    + ((!destination || destination.indexOf('DEST_URL_ESC') >= 0)
+      ? '' : '&destination=' + destination)                      ;
+  bjs.parentNode.insertBefore(js, bjs);
+}(document, 'script'));</script>
+
+<!--
+<div street-address="89964"></div><script>
+  (function(d, s) {
+    // CLICK MACRO AND CONFIGURATION SECTION
+    var destination = '%%DEST_URL_ESC%%';
+    // 3rd Party Click Tracking - default DFP compatibility
+    var click_url = 'http%3A%2F%2Finsight.adsrvr.org%2Ftrack%2Fclk%3Fimp%3D00000000-0000-0000-0000-000000000000%26ag%3Dtdadgroupid%26crid%3Dfakecreative%26fq%3D0%26td_s%3Ddesk.thetradedesk.com%26rcats%3D%26mcat%3D%26mste%3D%26mfld%3D4%26mssi%3D%26mfsi%3D%26sv%3Dopenx%26uhow%3D0%26agsa%3D%26rgco%3D%26rgre%3D%26rgme%3D%26rgci%3D%26rgz%3D%26dt%3D%26osf%3D%26os%3D%26br%3D%26svpid%3D%26rlangs%3D%26mlang%3D%26did%3D%26rcxt%3D%26tmpc%3D%26vrtd%3D%26osi%3D%26osv%3D%26dnr%3D0%26dur%3D%26crrelr%3D%26r%3D';
+    // DO NOT EDIT BELOW THIS LINE
+    var js, bjs = d.getElementsByTagName(s)[0];
+    js = d.createElement(s); js.async = true;
+    //js.src = "https://ad.broadstreetads.com/display/167814.js?sa=1&"
+    js.src = "http://localhost:9090/display/89964.js?preview=true&sa=1"
+      + (window.broadstreet ? 'init=0' : '')
+      + (click_url[0] == '%'
+        ? '' : '&click_url=' + click_url)
+      + ((!destination || destination[0] == '%')
+        ? '' : '&destination=' + destination)                      ;
+    bjs.parentNode.insertBefore(js, bjs);
+  }(document, 'script'));</script>
+-->

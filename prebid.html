@@ -1,0 +1,130 @@
+<html>
+<head>
+    <script src="/src/init-2.js"></script>
+    <script>window.broadstreet = window.broadstreet || { run: [] };</script>
+    <script>
+        // Load the Prebid Javascript Lib
+        (function () {
+            var d = document;
+            var pbs = d.createElement("script");
+            pbs.type = "text/javascript";
+            pbs.src = 'http://headertag.com/prebid/prebid-0.8-beta.js';
+            var target = d.getElementsByTagName("head")[0];
+            target.insertBefore(pbs, target.firstChild);
+        })();
+    </script>
+    <script>
+        // Get a map of winners from a PBJS bid response object
+        function getWinners(bidResponses) {
+            var winners = [];
+            var zones = Object.keys(bidResponses);
+            for (var i = 0; i < zones.length; i++) {
+                winners.push({zone_id: zones[i], winner: getWinner(bidResponses[zones[i]]) });
+            }
+            return winners;
+        }
+
+        // Get a winner from an individual ad unit's bid response
+		function getWinner(bidResponse) {
+			var veryLowNumber = -1 * Math.pow(2,32);
+			var highestCPM    = veryLowNumber;
+			var bids          = bidResponse.bids;
+			for (var i = 0; i < bids.length; i++) {
+				if (highestCPM > bids[i].cpm) {
+					continue;
+				} else {
+					highestCPM = bids[i].cpm;
+					tmpWinner  = bids[i];
+				}
+			}
+			return tmpWinner;
+		}
+
+        var PREBID_TIMEOUT = 5000; // Set your own
+
+        /* initAdserver will be called either when all bids are back, or
+         when the timeout is reached. */
+        function initAdserver() {
+            if (pbjs.initAdserverSet) return;
+            pbjs.initAdserverSet = true;
+			broadstreet.run.push(function () {
+				pbjs.que.push(function () {
+					// bid info is back from Prebid
+					console.log('Dumping all bid objects to console:', pbjs.getBidResponses());
+					var winners = getWinners(pbjs.getBidResponses());
+                    console.log('Bid winners: ', winners);
+                    var zoneOptions = {};
+                    for (var i = 0; i < winners.length; i++) {
+                        zoneOptions[winners[i].zone_id] = {
+                            // keywords: [winners[i].winner.bidderCode], // optional for separate tags per bidding partner
+                            // softKeywords: true, // require for the above
+                            targets: { hb_adid: winners[i].winner.adId }
+                        }
+                    }
+
+					// add a keyword to invoke the remnant placement
+					broadstreet.watch({ zoneOptions: zoneOptions });
+				});
+			});
+        }
+
+        // Load when timeout is reached.
+        setTimeout(initAdserver, PREBID_TIMEOUT);
+        var pbjs = pbjs || {};
+        pbjs.que = pbjs.que || [];
+
+        pbjs.que.push(function () {
+            /* 1. Register bidder tag Ids
+             Registers the bidder tags for your ad units. Once the prebid.js
+             library loads, it reads the pbjs.adUnits object and sends out
+             bid requests. Find the complete reference on bidders at
+             http://prebid.org/bidders.html.
+             */
+            var adUnits = [
+                {
+                    code: 201, // broadstreet zone id (placement at bottom of page). Change as needed
+                    sizes: [[300, 250]],
+                    bids: [
+                        {
+                            bidder: 'indexExchange',
+                            params: {
+                                id: '1',
+                                siteID: 999990
+                           }
+                        },
+                        {
+                            bidder: 'aol',
+                            params: {
+                                placement: '3675026',
+                                network: '9599.1'
+                           }
+                        }
+                    ]
+                }
+            ];
+            // add the adUnits
+            pbjs.addAdUnits(adUnits);
+            // register a callback handler
+            pbjs.addCallback('adUnitBidsBack', function (adUnitCode) {
+                console.log('ad unit bids back for : ' + adUnitCode);
+            });
+            /* Request bids for the added ad units. If adUnits or adUnitCodes are
+             not specified, the function will request bids for all added ad units.  */
+            pbjs.requestBids({
+                /* The bidsBack function will be called when either timeout is
+                 reached, or when all bids come back, whichever happens sooner.  */
+                bidsBackHandler: function (bidResponses) {
+                    initAdserver();
+                }
+            });
+        });
+    </script>
+    <script>
+
+    </script>
+</head>
+<body>
+<h2>Prebid + Broadstreet Test</h2>
+<broadstreet-zone zone-id="201"></broadstreet-zone>
+</body>
+</html>
