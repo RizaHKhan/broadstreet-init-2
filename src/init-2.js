@@ -7,7 +7,7 @@
     doc = win.document,
     MutationObserver = win.MutationObserver || win.WebKitMutationObserver,
     observer;
-
+        
     /**
      * Listen for availablity of certain DOM elements
      *
@@ -15,11 +15,13 @@
      * @param {any} fn The callback when it become available
      */
     var ready = function(selector, fn) {
+        
         // Store the selector and callback to be monitored
         listeners.push({
             selector: selector,
             fn: fn
         });
+
         if(!observer){
             // Watch for changes in the document
             observer = new MutationObserver(check);
@@ -28,6 +30,7 @@
                 subtree: true
             });
         }
+
         // Check if the element is currently in the DOM
         check();
     };
@@ -87,8 +90,8 @@
      * @returns
      */
     var randomString = function(prefix, length) {
-        return (prefix || '') + Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-    };
+        return (prefix || '') + Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1)
+    }
 
     /**
      * Get the segments of the current URL's URI
@@ -119,6 +122,8 @@
             altMode = false,
             previewParams = null,
             networkJSLoaded = false;
+
+            
 
         var options = {
             altZoneWhitelist: [],
@@ -152,7 +157,7 @@
             var css = options.selector + ' { ' + options.containerCss + ' }' +
                 options.selector + '-container-alt { ' + options.containerCss + ' }' +
                 options.selector + '-container { ' + options.containerCss + ' }';
-
+            
             var head = document.head || document.getElementsByTagName('head')[0],
                 style = document.createElement('style');
 
@@ -160,23 +165,22 @@
 
             if (style.styleSheet) {
               style.styleSheet.cssText = css;
+              logToConsole({"If StylSheet Exists": css})
             } else {
               style.appendChild(document.createTextNode(css));
+              logToConsole("If stylesheet does not Exists, css was appended")
             }
 
             head.appendChild(style);
         };
-           
+    
         var logToConsole = function() {
-            
             var args = Array.prototype.slice.call(arguments);
             args.unshift('Broadstreet Logger:');
             if(options.logging) {
                 console.log.apply(null, args)
-            }           
-        }
-
-        
+            }
+        }    
 
         /**
          * Return a comma separated list of keywords
@@ -184,7 +188,9 @@
          * @param {any} keywords
          * @returns
          */
+
         var constructKeywordsString = function (keywords) {
+            logToConsole({"#of keywords":keywords})    
             return typeof keywords.join === 'function' ? keywords.join(',') : keywords;
         };
 
@@ -205,14 +211,17 @@
             if (a instanceof Array) {
                 for (name in a) {
                     add(name, a[name]);
+                    logToConsole({"name": name})
                 }
             } else {
                 for (prefix in a) {
                     buildParams(prefix, a[ prefix ], add);
+                    logToConsole({"prefix": prefix})
                 }
             }
             output = s.join("&").replace(r20, "+");
-            return output;
+            logToConsole({"output": output})
+            return output;            
         };
 
         /**
@@ -225,6 +234,7 @@
             for (var i = 0; i < k.length; i++) {
                 t['bst_' + k[i]] = targets[k[i]];
             }
+            logToConsole({"targets": targets})
             return t;
         };
 
@@ -304,6 +314,7 @@
             el.insertAdjacentHTML(pos, z_el.outerHTML);
             // mark it so we don't hit it again
             el.setAttribute('data-autoattached', 'true');
+            logToConsole({"elements": el})
         };
 
         /**
@@ -315,7 +326,7 @@
             o1 = o1 || {};
             o2 = o2 || {};
             var newObject = {};
-
+                
             var keys = Object.keys(o1).concat(Object.keys(o2));
 
             for (var i  = 0; i < keys.length; i++) {
@@ -325,6 +336,8 @@
                     newObject[keys[i] + ''] = o1[keys[i]];
                 }
             }
+            
+            logToConsole({"New Object": newObject})
 
             return newObject;
         };
@@ -344,6 +357,7 @@
                     for (var j = 0; j < els.length; j++) {
                         attachZone(els[j], z);
                     }
+                    logToConsole({"autoAttach":z})
                 }
             }
         };
@@ -382,11 +396,14 @@
         var pageReady = self.pageReady = function (cb) {
             if (document.readyState === "complete" || document.readyState === "loaded" || document.readyState === "interactive") {
                 if (cb) cb();
+                logToConsole('CB is true')
                 return true;
+
             } else {
                 if (cb) {
                     document.addEventListener('DOMContentLoaded', cb);
                 }
+                logToConsole('CB is false')
                 return false;
             }
         };
@@ -404,14 +421,7 @@
         };
 
         var init = function() {
-            logToConsole(
-                {
-                    'Zones': zones,
-                    'Total Zone Count': self.loadZone.length,
-                    targets: options.targets
-
-                }                  
-            )
+            
             setCustomElementCSS();
             // check for preview mode
             previewParams = getPreviewParams();
@@ -441,6 +451,7 @@
              * run it if needed
              */
             if (options.networkId) {
+                logToConsole('networkId exists')
                 self.loadNetworkJS (options.networkId);
             }
 
@@ -491,6 +502,7 @@
          * @returns
          */
         var zoneElementAvailable = function(z, finalOverrides) {
+            logToConsole({"Zone": z})
             finalOverrides = finalOverrides || {};
             var id = z.getAttribute('zone-id') || z.getAttribute('alt-zone-id') || finalOverrides.zoneId || finalOverrides.altZoneId,
                 altId = z.getAttribute('alt-zone-id'),
@@ -639,7 +651,6 @@
                 el: z,
                 options: opts
             });
-
             loadZones();
         };
 
@@ -713,7 +724,7 @@
             if (opts.passTargetsToDestination) params.pt = 'true';
 
             src += '&' + objectToQueryString(params);
-
+            logToConsole({"src": src})    
             return src;
         };
 
@@ -840,10 +851,9 @@
         if (window.broadstreet && window.broadstreet.run) {
             self.run = window.broadstreet.run;
         }
-
         return self;
     })();
-
+        
 })(this);
 
 if (window.broadstreet.run && window.broadstreet.run.length) {
