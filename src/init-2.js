@@ -168,20 +168,23 @@
               logToConsole({"If StylSheet Exists": css})
             } else {
               style.appendChild(document.createTextNode(css));
-              logToConsole("If stylesheet does not Exists, css was appended")
+              logToConsole("If stylesheet does not exists, css was appended")
             }
 
             head.appendChild(style);
         };
-    
+        
+
+        // Added spread operator 
+        // reference for above: https://stackoverflow.com/questions/7942323/pass-arguments-to-console-log-as-first-class-arguments-via-proxy-function 
         var logToConsole = function() {
             var args = Array.prototype.slice.call(arguments);
             args.unshift('Broadstreet Logger:');
             if(options.logging) {
-                console.log.apply(null, args)
+                console.log(...args)
             }
-        }    
-
+        }            
+        
         /**
          * Return a comma separated list of keywords
          *
@@ -190,7 +193,7 @@
          */
 
         var constructKeywordsString = function (keywords) {
-            logToConsole({"#of keywords":keywords})    
+            logToConsole({"#of keywords":keywords})
             return typeof keywords.join === 'function' ? keywords.join(',') : keywords;
         };
 
@@ -216,12 +219,11 @@
             } else {
                 for (prefix in a) {
                     buildParams(prefix, a[ prefix ], add);
-                    logToConsole({"prefix": prefix})
                 }
             }
             output = s.join("&").replace(r20, "+");
             logToConsole({"output": output})
-            return output;            
+            return output;
         };
 
         /**
@@ -234,7 +236,7 @@
             for (var i = 0; i < k.length; i++) {
                 t['bst_' + k[i]] = targets[k[i]];
             }
-            logToConsole({"targets": targets})
+            logToConsole({"targets": targets, "t": t})
             return t;
         };
 
@@ -335,10 +337,8 @@
                 } else {
                     newObject[keys[i] + ''] = o1[keys[i]];
                 }
-            }
-            
+            }            
             logToConsole({"New Object": newObject})
-
             return newObject;
         };
 
@@ -539,6 +539,7 @@
             z.removeAttribute('style');
 
             if (altId) {
+                logToConsole({"altID": altId})
                 if (!zones[id]) zones[id] = {};
                 zones[id].altContainer = zContainer;
                 if (!options.useAltZone()) return;
@@ -684,7 +685,6 @@
             return '//' + options.domain + '/display/' + adId + '.js?sa=1&init=0';
         };
 
-
         /**
          * Construct the url for a zone
          *
@@ -693,7 +693,7 @@
          * @returns
          */
         var zoneUrl = function (id, opts) {
-
+            logToConsole({"id": id, "opts": opts})
             var src;
             if (opts.useZoneAliases && opts.networkId) {
                 src = '//' + opts.domain +  '/zndisplay/' + opts.networkId + '/' + id + '.js';
@@ -853,14 +853,14 @@
         }
         return self;
     })();
-        
+
 })(this);
 
 if (window.broadstreet.run && window.broadstreet.run.length) {
     for (var i = 0; i < window.broadstreet.run.length; i++) {
         window.broadstreet.run[i]();
     }
-}
+};
 
 window.broadstreet.run = {
     push: function(fn) {
@@ -875,4 +875,4 @@ if (document.dispatchEvent) {
     } catch (e) {
         // noop
     }
-}
+};
